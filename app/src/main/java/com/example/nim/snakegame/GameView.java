@@ -17,8 +17,35 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         getHolder().addCallback(this);
 
         thread = new MainThread(getHolder(), this);
-
         setFocusable(true);
+        OnSwipeTouchListener onSwipeTouchListener = new OnSwipeTouchListener(context)
+        {
+
+            @Override
+            public void onSwipeRight()
+            {
+                characterSprite.set_direction(Direction.RIGHT);
+            }
+
+            @Override
+            public void onSwipeLeft()
+            {
+                characterSprite.set_direction(Direction.LEFT);
+            }
+
+            @Override
+            public void onSwipeTop()
+            {
+                characterSprite.set_direction(Direction.FORWARD);
+            }
+
+            @Override
+            public void onSwipeBottom()
+            {
+                characterSprite.set_direction(Direction.BACKWARD);
+            }
+        };
+        this.setOnTouchListener(onSwipeTouchListener);
 
     }
 
