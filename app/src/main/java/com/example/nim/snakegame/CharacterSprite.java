@@ -1,9 +1,13 @@
 package com.example.nim.snakegame;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -28,8 +32,10 @@ class CharacterSprite
     private int delta_x;
     private int delta_y;
     private String direction;
+    private Context context;
+    private int end;
 
-    CharacterSprite(Bitmap bmp)
+    CharacterSprite(Bitmap bmp, Context context)
     {
         image = bmp;
         x = 100;
@@ -46,6 +52,8 @@ class CharacterSprite
         slices.add(new Slice(new Position(6, 18)));
         slices.add(new Slice(new Position(6, 17)));
         direction = Direction.FORWARD;
+        this.context = context;
+        this.end = 0;
     }
 
     ArrayList get_delta_x_and_delta_y()
@@ -136,11 +144,34 @@ class CharacterSprite
 
         if (count % (10 - speed) == 0)
         {
-            move_one_step_forward();
-            ctr += 1;
+            if (end==0)
+            {
+                move_one_step_forward();
+            }
+            ctr+= 1;
         }
-        x += xVelocity;
-        y += yVelocity;
+        if ((slices.get(0).position.x<0 || slices.get(0).position.x>13) || (slices.get(0).position.y<0 || slices.get(0).position.y>24))
+        {
+            endgame();
+
+        }
+
+    }
+
+    private void endgame()
+    {
+        if (end==0)
+        {
+            Vibrator v = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 500 milliseconds
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                //deprecated in API 26
+                v.vibrate(500);
+            }
+            end=1;
+        }
 
     }
 }

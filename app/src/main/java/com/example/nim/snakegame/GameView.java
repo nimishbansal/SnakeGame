@@ -12,9 +12,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread thread;
     private CharacterSprite characterSprite;
     private FoodSprite foodSprite;
+    private Context context;
+
 
     public GameView(Context context) {
         super(context);
+        this.context = context;
 
         getHolder().addCallback(this);
 
@@ -85,8 +88,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        characterSprite = new CharacterSprite(BitmapFactory.decodeResource(getResources(),R.drawable.avdgreen));
-        foodSprite = new FoodSprite(characterSprite);
+        characterSprite = new CharacterSprite(BitmapFactory.decodeResource(getResources(),R.drawable.avdgreen), this.context);
+        foodSprite = new FoodSprite(characterSprite, this.context);
 
 
         thread.setRunning(true);
