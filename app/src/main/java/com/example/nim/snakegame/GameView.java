@@ -3,6 +3,7 @@ package com.example.nim.snakegame;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -10,6 +11,7 @@ import android.view.SurfaceView;
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread thread;
     private CharacterSprite characterSprite;
+    private FoodSprite foodSprite;
 
     public GameView(Context context) {
         super(context);
@@ -24,27 +26,54 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             @Override
             public void onSwipeRight()
             {
-                characterSprite.set_direction(Direction.RIGHT);
+                try{
+                    characterSprite.set_direction(Direction.RIGHT);
+                }
+                catch(IllegalArgumentException ex)
+                {
+                    Log.i("MYTAG", ex.getMessage());
+                }
             }
 
             @Override
             public void onSwipeLeft()
             {
-                characterSprite.set_direction(Direction.LEFT);
+                try{
+                    characterSprite.set_direction(Direction.LEFT);
+                }
+                catch(IllegalArgumentException ex)
+                {
+                    Log.i("MYTAG", ex.getMessage());
+                }
             }
 
             @Override
             public void onSwipeTop()
             {
-                characterSprite.set_direction(Direction.FORWARD);
+                try
+                {
+                    characterSprite.set_direction(Direction.FORWARD);
+                }
+                catch(IllegalArgumentException ex)
+                {
+                    Log.i("MYTAG", ex.getMessage());
+                }
+
             }
 
             @Override
             public void onSwipeBottom()
             {
-                characterSprite.set_direction(Direction.BACKWARD);
+                try{
+                    characterSprite.set_direction(Direction.BACKWARD);
+                }
+                catch(IllegalArgumentException ex)
+                {
+                    Log.i("MYTAG", ex.getMessage());
+                }
             }
         };
+
         this.setOnTouchListener(onSwipeTouchListener);
 
     }
@@ -57,6 +86,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         characterSprite = new CharacterSprite(BitmapFactory.decodeResource(getResources(),R.drawable.avdgreen));
+        foodSprite = new FoodSprite(characterSprite);
 
 
         thread.setRunning(true);
@@ -81,6 +111,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
         characterSprite.update();
+        foodSprite.update();
 
     }
 
@@ -91,6 +122,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super.draw(canvas);
         if(canvas!=null) {
             characterSprite.draw(canvas);
+            foodSprite.draw(canvas);
 
         }
     }

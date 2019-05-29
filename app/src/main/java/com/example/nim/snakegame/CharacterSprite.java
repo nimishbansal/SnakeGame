@@ -13,7 +13,7 @@ import java.util.Objects;
 class CharacterSprite
 {
     private final int length;
-    private final ArrayList<Slice> slices;
+    public final ArrayList<Slice> slices;
     private Bitmap image;
     private int x, y;
     private int xVelocity = 10;
@@ -21,7 +21,7 @@ class CharacterSprite
     private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
     private int squareSize;
-    private int gapBetweenSquare;
+    public int gapBetweenSquare;
     private int ctr;
     private int count = 1;
     private int speed;
@@ -38,7 +38,7 @@ class CharacterSprite
         gapBetweenSquare = 10;
         ctr = 0;
         count = 0;
-        speed = 7;
+        speed = 5;
         length = 4;
         slices = new ArrayList<>();
         slices.add(new Slice(new Position(6, 20)));
@@ -64,7 +64,7 @@ class CharacterSprite
         ArrayList<Integer> array = new ArrayList<>();
         array.add(delta_x);
         array.add(delta_y);
-        Log.i("MYTAG", "delta_x, delta_y" + array.toString());
+//        Log.i("MYTAG", "delta_x, delta_y" + array.toString());
         return array;
     }
 
@@ -81,14 +81,14 @@ class CharacterSprite
         Slice new_slice = new Slice(new Position(first_slice.position.x + delta_x, first_slice.position.y + delta_y));
         this.slices.add(0, new_slice);
 
-        Log.i("MYTAG", this.slices.toString());
+//        Log.i("MYTAG", this.slices.toString());
 
     }
 
 
     void set_direction(String direction)
     {
-        Log.i("MYTAG", "trying setting direction as " + direction);
+//        Log.i("MYTAG", "trying setting direction as " + direction);
         if (!Arrays.asList(Direction.BACKWARD, Direction.FORWARD, Direction.LEFT, Direction.RIGHT).contains(direction))
         {
             throw new IllegalArgumentException("direction can only be: FORWARD, BACKWARD, LEFT, RIGHT");
@@ -102,7 +102,7 @@ class CharacterSprite
             throw new IllegalArgumentException("Snake cant reverse");
         }
 
-        Log.i("MYTAG", "setted direction as " + direction);
+//        Log.i("MYTAG", "setted direction as " + direction);
         this.direction = direction;
     }
 
@@ -123,18 +123,19 @@ class CharacterSprite
         }
     }
 
+    void increase_snake_length_by_1()
+    {
+        Slice currentLastSlice = slices.get(slices.size()-1);
+        Slice lastSlice = new Slice(new Position(currentLastSlice.position.x,currentLastSlice.position.y));
+        slices.add(slices.size(), lastSlice);
+    }
+
     void update()
     {
         count += 1;
 
         if (count % (10 - speed) == 0)
         {
-//            set_direction(Arrays.asList(Direction.FORWARD, Direction.BACKWARD, Direction.LEFT, Direction.RIGHT).get(new Random().nextInt(4)));
-//            if (count>50)
-//                set_direction(Direction.RIGHT);
-//            if (count>70)
-//                set_direction(Direction.BACKWARD);
-
             move_one_step_forward();
             ctr += 1;
         }
