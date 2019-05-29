@@ -12,7 +12,9 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 class CharacterSprite
 {
@@ -44,13 +46,13 @@ class CharacterSprite
         gapBetweenSquare = 10;
         ctr = 0;
         count = 0;
-        speed = 5;
+        speed = 15;
         length = 4;
         slices = new ArrayList<>();
-        slices.add(new Slice(new Position(6, 20)));
-        slices.add(new Slice(new Position(6, 19)));
-        slices.add(new Slice(new Position(6, 18)));
         slices.add(new Slice(new Position(6, 17)));
+        slices.add(new Slice(new Position(6, 18)));
+        slices.add(new Slice(new Position(6, 19)));
+        slices.add(new Slice(new Position(6, 20)));
         direction = Direction.FORWARD;
         this.context = context;
         this.end = 0;
@@ -87,10 +89,32 @@ class CharacterSprite
         this.slices.remove(this.slices.size()-1);
 
         Slice new_slice = new Slice(new Position(first_slice.position.x + delta_x, first_slice.position.y + delta_y));
-        this.slices.add(0, new_slice);
+
+        boolean flag;
+        flag = check_allowed_to_add(slices, new_slice);
+        if (flag)
+        {
+            this.slices.add(0, new_slice);
+        }
+        else
+        {
+            endgame();
+        }
 
 //        Log.i("MYTAG", this.slices.toString());
 
+    }
+
+    private boolean check_allowed_to_add(ArrayList<Slice> slices, Slice new_slice)
+    {
+        for (int j=0;j<slices.size();j++)
+        {
+//            Log.i("MYTAG", "a1, " + String.valueOf(slices.get(j).position.x)+", "+ String.valueOf(new_slice.position.x));
+//            Log.i("MYTAG", "a2, " +String.valueOf(slices.get(j).position.y)+", "+ String.valueOf(new_slice.position.y));
+            if (slices.get(j).position.x==new_slice.position.x && slices.get(j).position.y==new_slice.position.y)
+                return false;
+        }
+        return true;
     }
 
 
@@ -142,7 +166,7 @@ class CharacterSprite
     {
         count += 1;
 
-        if (count % (10 - speed) == 0)
+        if (count % (20 - speed) == 0)
         {
             if (end==0)
             {
@@ -150,7 +174,9 @@ class CharacterSprite
             }
             ctr+= 1;
         }
-        if ((slices.get(0).position.x<0 || slices.get(0).position.x>13) || (slices.get(0).position.y<0 || slices.get(0).position.y>24))
+
+        if (    (slices.get(0).position.x<0 || slices.get(0).position.x>13) ||
+                (slices.get(0).position.y<0 || slices.get(0).position.y>24))
         {
             endgame();
 
@@ -165,10 +191,10 @@ class CharacterSprite
             Vibrator v = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
             // Vibrate for 500 milliseconds
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+                v.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
                 //deprecated in API 26
-                v.vibrate(500);
+                v.vibrate(1000);
             }
             end=1;
         }
