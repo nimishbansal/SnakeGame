@@ -8,22 +8,17 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 class CharacterSprite
 {
     private final int length;
-    public final ArrayList<Slice> slices;
+    final ArrayList<Slice> slices;
     private Bitmap image;
     private int x, y;
-    private int xVelocity = 10;
-    private int yVelocity = 5;
     private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
     private int squareSize;
@@ -49,6 +44,7 @@ class CharacterSprite
         speed = 15;
         length = 4;
         slices = new ArrayList<>();
+        //Populating snake with 4 slices
         slices.add(new Slice(new Position(6, 17)));
         slices.add(new Slice(new Position(6, 18)));
         slices.add(new Slice(new Position(6, 19)));
@@ -58,7 +54,8 @@ class CharacterSprite
         this.end = 0;
     }
 
-    ArrayList get_delta_x_and_delta_y()
+    /*this function calculates change in coordinates depending on the direction*/
+    private ArrayList get_delta_x_and_delta_y()
     {
         delta_x = 0;
         delta_y = 0;
@@ -78,7 +75,8 @@ class CharacterSprite
         return array;
     }
 
-    void move_one_step_forward()
+    /*It moves snake 1 step in the direction*/
+    private void move_one_step_forward()
     {
         /*assuming snake is moving forward*/
         ArrayList result = get_delta_x_and_delta_y();
@@ -91,6 +89,7 @@ class CharacterSprite
         Slice new_slice = new Slice(new Position(first_slice.position.x + delta_x, first_slice.position.y + delta_y));
 
         boolean flag;
+        //Snake collide with own body end game
         flag = check_allowed_to_add(slices, new_slice);
         if (flag)
         {
@@ -101,26 +100,21 @@ class CharacterSprite
             endgame();
         }
 
-//        Log.i("MYTAG", this.slices.toString());
-
     }
 
     private boolean check_allowed_to_add(ArrayList<Slice> slices, Slice new_slice)
     {
         for (int j=0;j<slices.size();j++)
         {
-//            Log.i("MYTAG", "a1, " + String.valueOf(slices.get(j).position.x)+", "+ String.valueOf(new_slice.position.x));
-//            Log.i("MYTAG", "a2, " +String.valueOf(slices.get(j).position.y)+", "+ String.valueOf(new_slice.position.y));
             if (slices.get(j).position.x==new_slice.position.x && slices.get(j).position.y==new_slice.position.y)
                 return false;
         }
         return true;
     }
 
-
+    /*function to change direction when swiped*/
     void set_direction(String direction)
     {
-//        Log.i("MYTAG", "trying setting direction as " + direction);
         if (!Arrays.asList(Direction.BACKWARD, Direction.FORWARD, Direction.LEFT, Direction.RIGHT).contains(direction))
         {
             throw new IllegalArgumentException("direction can only be: FORWARD, BACKWARD, LEFT, RIGHT");
@@ -133,8 +127,6 @@ class CharacterSprite
         {
             throw new IllegalArgumentException("Snake cant reverse");
         }
-
-//        Log.i("MYTAG", "setted direction as " + direction);
         this.direction = direction;
     }
 
@@ -155,6 +147,7 @@ class CharacterSprite
         }
     }
 
+    /* Increases the length of snake by 1*/
     void increase_snake_length_by_1()
     {
         Slice currentLastSlice = slices.get(slices.size()-1);
@@ -175,6 +168,7 @@ class CharacterSprite
             ctr+= 1;
         }
 
+        //Boundary Conditions End Game
         if (    (slices.get(0).position.x<0 || slices.get(0).position.x>13) ||
                 (slices.get(0).position.y<0 || slices.get(0).position.y>24))
         {
