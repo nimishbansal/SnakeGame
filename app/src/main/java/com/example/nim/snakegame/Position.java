@@ -2,9 +2,8 @@ package com.example.nim.snakegame;
 
 class Position
 {
-    /*
-     It represents a coordinate in Cartesian System
-     */
+    //It represents a coordinate in Cartesian System
+
     int x;
     int y;
 

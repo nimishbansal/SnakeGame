@@ -23,12 +23,17 @@ public class FoodSprite
     {
         int random_x;
         int random_y;
+
         random_x = new Random().nextInt(13);
         random_y = new Random().nextInt(24);
+
         boolean generate_again = true;
         int j;
         while (generate_again)
         {
+            random_x = new Random().nextInt(13);
+            random_y = new Random().nextInt(24);
+            Log.i("mytag", "generating again and again");
             for (j = 0; j < slices.size(); j++)
             {
                 if (slices.get(j).position.x == random_x && slices.get(j).position.y == random_y)
