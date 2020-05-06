@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,7 +42,7 @@ class CharacterSprite
         gapBetweenSquare = 10;
         ctr = 0;
         count = 0;
-        speed = 15;
+        speed = 4;
         length = 4;
         slices = new ArrayList<>();
         //Populating snake with 4 slices
@@ -139,11 +140,23 @@ class CharacterSprite
         paint.setStrokeWidth(3);
         for (int i = 0; i < slices.size(); i++)
         {
+            Log.i("TAG", "i = " + i);
             int right, left;
             Slice slice = slices.get(i);
             right = slice.position.y;
             left = slice.position.x;
-            canvas.drawRect(50 * left + gapBetweenSquare, 50 * right + gapBetweenSquare, 50 * left + 50, 50 * right + 50, paint);
+            if (i == 0){
+                // setting mouth to different colour
+                Paint paint1 = new Paint();
+                paint1.setColor(Color.YELLOW);
+                paint1.setStyle(Paint.Style.FILL);
+                paint1.setStrokeWidth(3);
+//                canvas.drawRect(50 * left + gapBetweenSquare, 50 * right + gapBetweenSquare, 50 * left + 50, 50 * right + 50, paint1);
+                canvas.drawCircle(50 * left + 20 + gapBetweenSquare, 50*right + 20 + gapBetweenSquare, 22, paint1);
+                continue;
+            }
+//            canvas.drawRect(50 * left + gapBetweenSquare, 50 * right + gapBetweenSquare, 50 * left + 50, 50 * right + 50, paint);
+            canvas.drawCircle(50 * left + 20 + gapBetweenSquare, 50*right + 20 + gapBetweenSquare, 22, paint);
         }
     }
 
@@ -159,7 +172,7 @@ class CharacterSprite
     {
         count += 1;
 
-        if (count % (20 - speed) == 0)
+        if (count % (speed) == 0)
         {
             if (end==0)
             {
