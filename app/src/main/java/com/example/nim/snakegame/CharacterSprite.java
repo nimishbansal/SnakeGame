@@ -203,7 +203,7 @@ class CharacterSprite
                 //deprecated in API 26
                 v.vibrate(1000);
             }
-            end=1;
+            end = 1;
         }
 
     }
